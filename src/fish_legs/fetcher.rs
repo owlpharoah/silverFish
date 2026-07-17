@@ -14,6 +14,7 @@ impl From<reqwest::Error> for FetchError {
     }
 }
 
+#[derive(Clone)]
 pub struct Fetcher {
     pub client: Client,
 }

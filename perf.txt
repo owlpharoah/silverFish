@@ -1,1 +1,23 @@
-no semaphores: end_time:5.6276727
+no semaphores
+max_depth: 2
+link: https://www.scrapethissite.com/pages/
+output: 43
+end_time:5.6276727
+
+ ---
+
+no semaphores
+basic worker_pool setup
+frontier: VecDeque
+max_conc: 10
+max_depth: 3
+link: https://www.scrapethissite.com/pages/
+output: 2089
+hyperfine \
+  --warmup 5 \
+  --runs 100 \
+  --shell=none \
+  './target/release/spideysense'
+Benchmark 1: ./target/release/spideysense
+  Time (mean ± σ):      5.775 s ±  1.155 s    [User: 0.243 s, System: 0.050 s]
+  Range (min … max):    4.572 s … 15.104 s    100 runs

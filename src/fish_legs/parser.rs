@@ -5,6 +5,7 @@ use url::Url;
 
 use crate::fish_legs::config::Config;
 
+#[derive(Clone)]
 pub struct Parser;
 
 impl Parser {

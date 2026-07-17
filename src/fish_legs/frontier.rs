@@ -1,26 +1,35 @@
 use std::collections::VecDeque;
 
+use tokio::sync::Mutex;
 use url::Url;
 
+use crate::fish_legs::types::CrawlTask;
+
 pub struct Frontier {
-    structure: VecDeque<Url>,
+    structure: Mutex<VecDeque<CrawlTask>>,
 }
 
 impl Frontier {
-    pub fn new(seed: Vec<Url>) -> Self {
-        let structure = VecDeque::from(seed);
-        Self { structure }
+    pub fn new(seed: Url) -> Self {
+        let mut structure: VecDeque<CrawlTask> = VecDeque::new();
+        structure.push_back(CrawlTask {
+            url: seed,
+            depth: 1,
+        });
+        Self {
+            structure: Mutex::from(structure),
+        }
     }
-    pub fn push(&mut self, url: &Url) {
-        self.structure.push_back(url.clone());
+    pub async fn push(&self, url: &CrawlTask) {
+        self.structure.lock().await.push_back(url.clone());
     }
-    pub fn pop(&mut self) -> Option<Url> {
-        self.structure.pop_front()
+    pub async fn pop(&self) -> Option<CrawlTask> {
+        self.structure.lock().await.pop_front()
     }
-    pub fn len(&self) -> usize {
-        self.structure.len()
+    pub async fn len(&self) -> usize {
+        self.structure.lock().await.len()
     }
-    pub fn is_empty(&self) -> bool {
-        self.structure.is_empty()
+    pub async fn is_empty(&self) -> bool {
+        self.structure.lock().await.is_empty()
     }
 }
